@@ -13,8 +13,8 @@ class TestTextNode(unittest.TestCase):
         node4 = TextNode("pey", TextType.ITALIC)
         self.assertNotEqual(node3, node4)
 
-    def test_none(self, url=None):
-        node5 = TextNode("Yeps", TextType.CODE_TEXT)
+    def test_none(self):
+        node5 = TextNode("Yeps", TextType.CODE_TEXT, None)
         self.assertIsNone(node5.url)
 
     def test_NotNone(self):
