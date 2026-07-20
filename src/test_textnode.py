@@ -6,6 +6,7 @@ from split import (
     extract_markdown_links,
     split_nodes_image,
     split_nodes_link,
+    text_to_textnodes,
 )
 
 
@@ -72,6 +73,21 @@ class TestTextNode(unittest.TestCase):
                 ),
             ],
             new_nodes,
+        )
+
+    def test_split_string(self):
+        text = "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
+        node = text_to_textnodes(text)
+        self.assertListEqual(
+            [
+                TextNode("This is text with a link ", TextType.TEXT),
+                TextNode("to boot dev", TextType.LINKS, "https://www.boot.dev"),
+                TextNode(" and ", TextType.TEXT),
+                TextNode(
+                    "to youtube", TextType.LINKS, "https://www.youtube.com/@bootdotdev"
+                ),
+            ],
+            node,
         )
 
 
