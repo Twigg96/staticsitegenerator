@@ -1,5 +1,6 @@
 import unittest
 from textnode import TextNode, TextType, text_node_to_html_node
+from blocks import block_to_block_type, BlockType
 from split import (
     split_nodes_delimiter,
     extract_markdown_images,
@@ -110,6 +111,36 @@ class TestTextNode(unittest.TestCase):
             ],
             blocks,
         )
+
+    def test_block_heading(self):
+        md = "## Heading"
+        block = block_to_block_type(md)
+        self.assertEqual(block, BlockType.HEADING)
+
+    def test_block_code(self):
+        md = "```code```"
+        block = block_to_block_type(md)
+        self.assertEqual(block, BlockType.CODE)
+
+    def test_block_quote(self):
+        md = ">quote"
+        block = block_to_block_type(md)
+        self.assertEqual(block, BlockType.QUOTE)
+
+    def test_block_ul(self):
+        md = "- list\n- list"
+        block = block_to_block_type(md)
+        self.assertEqual(block, BlockType.UNORDERED_LIST)
+
+    def test_block_ol(self):
+        md = "1. list\n2. list"
+        block = block_to_block_type(md)
+        self.assertEqual(block, BlockType.ORDERED_LIST)
+
+    def test_block_para(self):
+        md = " Heading"
+        block = block_to_block_type(md)
+        self.assertEqual(block, BlockType.PARAGRAPH)
 
 
 if __name__ == "__main__":
