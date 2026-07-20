@@ -36,3 +36,51 @@ def extract_markdown_links(text: str) -> list[tuple[str, str]]:
     pattern = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
     matches = re.findall(pattern, text)
     return matches
+
+
+def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
+    split_nodes = []
+    for node in old_nodes:
+        images = extract_markdown_images(node.text)
+        if node.text_type != TextType.TEXT:
+            split_nodes.append(node)
+            continue
+        if not images:
+            split_nodes.append(node)
+            continue
+        remaining = node.text
+        for text, url in images:
+            sections = remaining.split(f"![{text}]({url})", 1)
+            before = sections[0]
+            after = sections[1]
+            if before:
+                split_nodes.append(TextNode(before, TextType.TEXT))
+            split_nodes.append(TextNode(text, TextType.IMAGES, url))
+            remaining = after
+        if remaining:
+            split_nodes.append(TextNode(remaining, TextType.TEXT))
+    return split_nodes
+
+
+def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
+    split_nodes = []
+    for node in old_nodes:
+        link = extract_markdown_links(node.text)
+        if node.text_type != TextType.TEXT:
+            split_nodes.append(node)
+            continue
+        if not link:
+            split_nodes.append(node)
+            continue
+        remaining = node.text
+        for text, url in link:
+            sections = remaining.split(f"[{text}]({url})", 1)
+            before = sections[0]
+            after = sections[1]
+            if before:
+                split_nodes.append(TextNode(before, TextType.TEXT))
+            split_nodes.append(TextNode(text, TextType.LINKS, url))
+            remaining = after
+        if remaining:
+            split_nodes.append(TextNode(remaining, TextType.TEXT))
+    return split_nodes
