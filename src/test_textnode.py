@@ -11,6 +11,7 @@ from split import (
     markdown_to_blocks,
 )
 from markdown_to_html import markdown_to_html_node
+from extract_title import extract_title
 
 
 class TestTextNode(unittest.TestCase):
@@ -172,6 +173,16 @@ class TestTextNode(unittest.TestCase):
             html,
             "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
         )
+
+    def test_extract_heading(self):
+        md = """# Yeps"""
+        heading = extract_title(md)
+        self.assertEqual(heading, "Yeps")
+
+    def test_extract_heading_exception(self):
+        md = """Yeps"""
+        with self.assertRaises(Exception):
+            extract_title(md)
 
 
 if __name__ == "__main__":

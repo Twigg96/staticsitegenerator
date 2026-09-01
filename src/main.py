@@ -1,5 +1,6 @@
 from textnode import *
 import os, shutil
+from generate_page import generate_page
 
 
 def check_directory(destination):
@@ -17,12 +18,14 @@ def copy_content(source, destination):
             shutil.copy(source_path, destination_path)
             print(f"Copying {source_path} to {destination_path}")
         else:
+            os.mkdir(destination_path)
             copy_content(source_path, destination_path)
 
 
 def main():
-    check_directory("destination")
+    check_directory("public")
     copy_content("static", "public")
+    generate_page("content/index.md", "template.html", "public/index.html")
 
 
 main()
