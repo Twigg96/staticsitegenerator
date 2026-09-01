@@ -1,6 +1,6 @@
 from textnode import *
 import os, shutil
-from generate_page import generate_page
+from generate_pages_recursive import generate_pages_recursive
 
 
 def check_directory(destination):
@@ -25,7 +25,7 @@ def copy_content(source, destination):
 def main():
     check_directory("public")
     copy_content("static", "public")
-    generate_page("content/index.md", "template.html", "public/index.html")
+    generate_pages_recursive("content", "template.html", "public")
 
 
 main()
