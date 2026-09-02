@@ -1,5 +1,5 @@
 from textnode import *
-import os, shutil
+import os, shutil, sys
 from generate_pages_recursive import generate_pages_recursive
 
 
@@ -23,9 +23,10 @@ def copy_content(source, destination):
 
 
 def main():
-    check_directory("public")
-    copy_content("static", "public")
-    generate_pages_recursive("content", "template.html", "public")
+    basepath = sys.argv
+    check_directory("docs")
+    copy_content("static", "docs")
+    generate_pages_recursive("content", "template.html", "docs", basepath)
 
 
 main()
